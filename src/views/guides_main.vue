@@ -1,8 +1,8 @@
 <template>
 
   <div class='container spacer '>
-    <div class='container no_guides' v-if='!current_user'><h5>PLEASE LOGIN TO VIEW CHARACTERS</h5></div>
-    <ul class='collapsible visibility z-depth-0 guides border_styling' >
+    <div class='container no_guides' v-show='!current_user'><h5>PLEASE LOGIN TO VIEW CHARACTERS</h5></div>
+    <ul class='collapsible z-depth-0 guides border_styling' v-show='current_user'>
       <li v-for="char in display_chars" v-bind:key="char.id">
         <div class='collapsible-header grey lighten-4'>{{ char.char_name }}</div>
         <div class='collapsible-body white'>{{ char.char_description }}</div>
@@ -28,10 +28,10 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.current_user = user.displayName
-        this.switch_visible(user)
+
       } else {
         this.current_user = null
-        this.switch_visible(user)
+
       }
     })
 
@@ -52,17 +52,7 @@ export default {
   },
 
   methods: {
-    switch_visible(user) {
-      if(user) {
-        document.querySelector('.visibility').style.visibility= 'visible';
 
-      } else {
-        console.log('no user');
-        document.querySelector('.visibility').style.visibility= 'hidden';
-
-      }
-
-    }
   },
 
   mounted() {
@@ -84,9 +74,6 @@ export default {
   border: none;
 }
 
-.visibility {
-  visibility: hidden;
-}
 
 .no_guides {
   background-color: #ee6e73;
