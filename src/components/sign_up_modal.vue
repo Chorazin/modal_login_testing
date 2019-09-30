@@ -19,6 +19,12 @@
             <input type='text' id='signup-username' v-model='signup_username'/>
             <label for='signup-username'>Username</label>
           </div>
+
+          <div class='input-field'>
+            <input type='text' id='bio' v-model='bio'/>
+            <label for='signup-username'>one line bio</label>
+          </div>
+
           <p class='red-text center' v-if='feedback'>{{ feedback }}</p>
           <button class='btn red accent-2 z-depth-0 button_custom center'>Sign Up</button>
         </form>
@@ -42,7 +48,8 @@ export default {
       signup_password: null,
       signup_username: null,
       feedback: null,
-      slug: null
+      slug: null,
+      bio: null
 
     }
   },
@@ -67,7 +74,8 @@ export default {
               ref.set({
                 email: this.signup_email,
                 password: this.signup_password,
-                user_id: cred.user.uid
+                user_id: cred.user.uid,
+                bio: this.bio
               })
               //set the display name of the user auth token to be the sign up username
                 cred.user.updateProfile({

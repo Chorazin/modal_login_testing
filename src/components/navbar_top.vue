@@ -5,7 +5,7 @@
       <a href="#"><img src='../assets/wings_v001.jpg' height='64px' class='left'>Fantasy Characters</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li class='logged_in'>
-          <a href="#" class='modal-trigger' data-target='modal-account'>Account</a>
+          <a href="#" class='modal-trigger' v-if='current_user' data-target='modal-account'>Account</a>
         </li>
         <li class='logged_in'>
           <a href="#" id='logout' v-if='current_user' v-on:click='logout'>Logout</a>
@@ -24,9 +24,9 @@
     </div>
     </nav>
     <!-- VUE COMPONENT MODALS -->
-    <sign_up_modal v-on:update_user='update_current_user'/>
-    <login_modal v-on:update_user='update_current_user'/>
-    <account_modal />
+    <sign_up_modal v-on:update_user='update_user_cred'/>
+    <login_modal v-on:update_user='update_user_cred'/>
+    <account_modal v-bind:current_user='current_user'/>
     <create_char_modal />
     <confirmation_modal />
   </div>
@@ -45,7 +45,8 @@ export default {
 
   data() {
     return {
-      current_user: null
+      current_user: null,
+      current_user_email: null
     }
   },
 
@@ -56,8 +57,9 @@ export default {
       })
     },
 
-    update_current_user(user) {
-      this.current_user = user
+    update_user_cred(user) {
+      this.current_user = user,
+      this.current_user_email = user
     }
   },
 
@@ -70,14 +72,6 @@ export default {
   },
 
   created() {
-  /*  firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        this.current_user = user.displayName
-      } else {
-        this.current_user = null
-      }
-    }) */
-
     if(firebase.auth().currentUser){
       //we have a user
       this.current_user = firebase.auth().currentUser.displayName
@@ -89,7 +83,6 @@ export default {
 
   mounted() {
     // initialize materialize elements
-
       let modals = document.querySelectorAll('.modal');
       M.Modal.init(modals);
 
