@@ -27,11 +27,10 @@ export default {
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
-        this.current_user = user.displayName
+        this.current_user = true
 
       } else {
         this.current_user = null
-
       }
     })
 
@@ -48,10 +47,18 @@ export default {
           })
         }
       })
-    })
+    }, err => {
+      console.log(err.message)
+    });
+
   },
 
   methods: {
+
+
+  },
+
+  computed: {
 
   },
 

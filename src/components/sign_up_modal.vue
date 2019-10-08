@@ -73,7 +73,6 @@ export default {
               //make a user record in the database
               ref.set({
                 email: this.signup_email,
-                password: this.signup_password,
                 user_id: cred.user.uid,
                 bio: this.bio
               })
@@ -82,11 +81,12 @@ export default {
                 displayName: this.signup_username
               }).then(() => {
                 //pass the current user back to the parent component on an emit event
-                this.$emit('update_user', firebase.auth().currentUser.displayName)
+                this.$emit('update_user', firebase.auth().currentUser)
                 //reset form fields and close the modal
                 this.signup_email = null
                 this.signup_password = null
                 this.signup_username = null
+                this.bio = null
                 let sig_modal = document.querySelector('#modal-signup')
                 M.Modal.init(sig_modal).close()
               })

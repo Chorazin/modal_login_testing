@@ -7,6 +7,7 @@
         <div class='account-details'>username: {{this.current_user}}</div>
         <div class='account-details'>email: {{this.user_email}}</div>
         <div class='account-details'>bio: {{this.bio}} </div>
+        <div class='account-details green lighten-2' v-show='admin'>admin</div>
       </div>
     </div>
   </div>
@@ -26,26 +27,40 @@ export default {
   data() {
     return {
       user_email: null,
-      bio: null
+      bio: null,
+      admin: null
     }
   },
 
   created() {
-    if(firebase.auth().currentUser) {
-      this.user_email = firebase.auth().currentUser.email
-      //search for the document with the id equal to the user id and grab the bio
-      const user_ref = firebase.auth().currentUser.uid
-
-      db.collection('users').where('user_id', '==', user_ref).get().then(snapshot => {
-        snapshot.forEach(doc => {
-        //set the bio for the account info
-        this.bio = doc.data().bio
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+          if(idTokenResult.claims.admin) {
+            this.admin = true
+          } else {
+            //placeholder
+          }
         })
-      })
 
-    } else {
+        this.user_email = firebase.auth().currentUser.email
+        //search for the document with the id equal to the user id and grab the bio
+        const user_ref = firebase.auth().currentUser.uid
 
-    }
+        db.collection('users').where('user_id', '==', user_ref).get().then(snapshot => {
+          snapshot.forEach(doc => {
+          //set the bio for the account info
+          this.bio = doc.data().bio
+          })
+        })
+      } else {
+        this.user_email = null
+        this.bio = null
+        this.admin = false
+      }
+    })
+
+
   }
 }
 </script>
